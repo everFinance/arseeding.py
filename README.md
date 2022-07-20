@@ -11,14 +11,14 @@ pip install arseeding
 
 - Quick start
 
-upload python.pdf to arweave using arseeding, and pay with usdc in your everapy account.
+upload file python.pdf to arweave using arseeding, and pay with usdc in your everapy account.
 
 ```python
 
 import arseeding, everpay
 # ar account
 signer = everpay.ARSigner('ar_wallet.json')
-data = open('game.py', 'rb').read()
+data = open('python.pdf', 'rb').read()
 o = arseeding.send_and_pay(signer, 'usdc', data)
 print(o['itemId'])
 
