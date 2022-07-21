@@ -17,8 +17,20 @@ class BundleItem:
         self.signer = signer
         self.signature_type = sig_conf[signer.type.lower()]['signature_type']
         self.owner = signer.owner
-        self.target = target
-        self.anchor = anchor
+        
+        self.target = ''
+        if target:
+            if len(base64url_decode(target.encode())) != 32:
+                raise ValueError('length of target is 32')
+            self.target = target
+        
+        self.anchor = ''
+        if anchor:
+            # /tx_anchor return anchor is 48 byte.
+            if len(base64url_decode(anchor.encode())) != 32:
+                raise ValueError('length of anchor is 32')
+            self.anchor = anchor
+
         self.tags = tags
         self.data = data
         self.sign()
