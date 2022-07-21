@@ -37,6 +37,10 @@ class BundleItem:
         self.binary = self.get_item_binary()
     
     def get_data_to_sign(self):
+        tags = b''
+        if self.tags:
+            tags = serialize_tags(self.tags)
+        
         datalist = [
             b'dataitem',
             b'1',
@@ -49,7 +53,7 @@ class BundleItem:
             #serialize_tags(self.tags),
             #b'',
             #b'',
-            b'',
+            tags,
             self.data
         ]
         return deep_hash.deep_hash(datalist)
@@ -87,5 +91,13 @@ class BundleItem:
         else:
             binary += b'\x00'
         
-        binary += (0).to_bytes(8, byteorder='little') + (0).to_bytes(8, byteorder='little') + data
+        if self.tags:
+            tags = serialize_tags(self.tags)
+            binary += (len(self.tags)).to_bytes(8, byteorder='little')
+            binary += (len(tags)).to_bytes(8, byteorder='little')
+            binary += tags
+        else:
+            binary += (0).to_bytes(8, byteorder='little') + (0).to_bytes(8, byteorder='little')
+
+        binary += data
         return binary
