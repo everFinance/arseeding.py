@@ -4,7 +4,8 @@ from .bundleitem import BundleItem
 
 arseed_url = 'https://arseed.web3infura.io'
 pay_url = 'https://api.everpay.io'
-def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_url=arseed_url):
+
+def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_url=arseed_url, pay_url=pay_url):
     if data == type(''):
         data = data.encode()
     
@@ -14,7 +15,7 @@ def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_u
                     data=b.binary,
                     headers={'Content-Type': 'application/octet-stream'}
     )
-   
+    print(res.content)
     if res.status_code == 200:
         order = res.json()
         
@@ -22,4 +23,4 @@ def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_u
         account.transfer(currency, order['bundler'], int(order['fee']), data=json.dumps(order))
 
         return order    
-
+    

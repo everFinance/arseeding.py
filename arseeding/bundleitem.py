@@ -30,11 +30,13 @@ class BundleItem:
             b'1',
             str(self.signature_type).encode(),
             base64url_decode(self.signer.owner.encode()),
+            base64url_decode(self.target.encode()),
+            base64url_decode(self.anchor.encode()),
             #self.target.encode(),
             #self.anchor.encode(),
             #serialize_tags(self.tags),
-            b'',
-            b'',
+            #b'',
+            #b'',
             b'',
             self.data
         ]
@@ -42,7 +44,7 @@ class BundleItem:
 
     def sign(self):
         data = self.get_data_to_sign()
-        if self.signer.type == 'AR':
+        if self.signature_type == 1:
             sig = self.signer.wallet.sign(data)
             self.id = base64url_encode(hashlib.sha256(sig).digest()).decode()
             self.signature = base64url_encode(sig).decode()
@@ -53,5 +55,25 @@ class BundleItem:
         st = self.signature_type.to_bytes(2, byteorder='little')
         sig = base64url_decode(self.signature.encode())
         owner = base64url_decode(self.signer.owner.encode())
+        
+        if self.target:
+            target = base64url_decode(self.target.encode())
+        if self.anchor:
+            anchor = base64url_decode(self.anchor.encode())
+
         data = self.data      
-        return st+sig+owner+b"\x00\x00"+(0).to_bytes(8, byteorder='little') +(0).to_bytes(8, byteorder='little')+data
+
+        binary = st+sig+owner
+        
+        if self.target:
+            binary += b'\x01' + target
+        else:
+            binary += b'\x00'
+        
+        if self.anchor:
+            binary += b'\x01' + anchor
+        else:
+            binary += b'\x00'
+        
+        binary += (0).to_bytes(8, byteorder='little') + (0).to_bytes(8, byteorder='little') + data
+        return binary
