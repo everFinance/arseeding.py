@@ -1,4 +1,5 @@
 import hashlib
+from eth_keys import keys
 from arweave import deep_hash
 from jose.utils import base64url_decode, base64url_encode
 from .tags import serialize_tags
@@ -9,15 +10,27 @@ sig_conf = {
         'sig_length': 512,
         'pub_length': 512,
         'sig_name': 'arweave'
-    }
+    },
+    'eth': {
+        'signature_type': 3,
+        'sig_length': 65,
+        'pub_length': 65,
+        'sig_name': 'ethereum'
+    },
 }
 
 class BundleItem:
     def __init__(self, signer, target, anchor, tags, data):
         self.signer = signer
         self.signature_type = sig_conf[signer.type.lower()]['signature_type']
-        self.owner = signer.owner
         
+        if self.signature_type == 1:
+            self.owner = signer.owner
+        elif self.signature_type == 3:
+            self.owner = base64url_encode(b'\x04'+keys.PrivateKey(bytes.fromhex(signer.private_key)).public_key.to_bytes()).decode()
+        else:
+            raise('signer have not support')
+
         self.target = ''
         if target:
             if len(base64url_decode(target.encode())) != 32:
@@ -45,14 +58,9 @@ class BundleItem:
             b'dataitem',
             b'1',
             str(self.signature_type).encode(),
-            base64url_decode(self.signer.owner.encode()),
+            base64url_decode(self.owner.encode()),
             base64url_decode(self.target.encode()),
             base64url_decode(self.anchor.encode()),
-            #self.target.encode(),
-            #self.anchor.encode(),
-            #serialize_tags(self.tags),
-            #b'',
-            #b'',
             tags,
             self.data
         ]
@@ -62,15 +70,22 @@ class BundleItem:
         data = self.get_data_to_sign()
         if self.signature_type == 1:
             sig = self.signer.wallet.sign(data)
-            self.id = base64url_encode(hashlib.sha256(sig).digest()).decode()
-            self.signature = base64url_encode(sig).decode()
+            
+        elif self.signature_type == 3:
+            sig = self.signer.sign(data)
+            sig = bytes.fromhex(sig[2:])
+        else:
+            raise('signer have not support')
+    
+        self.id = base64url_encode(hashlib.sha256(sig).digest()).decode()
+        self.signature = base64url_encode(sig).decode()
 
     def get_item_binary(self):
         if not self.id or not self.signature:
             raise ValueError("no signature")
         st = self.signature_type.to_bytes(2, byteorder='little')
         sig = base64url_decode(self.signature.encode())
-        owner = base64url_decode(self.signer.owner.encode())
+        owner = base64url_decode(self.owner.encode())
         
         if self.target:
             target = base64url_decode(self.target.encode())
@@ -79,7 +94,7 @@ class BundleItem:
 
         data = self.data      
 
-        binary = st+sig+owner
+        binary = st + sig + owner
         
         if self.target:
             binary += b'\x01' + target

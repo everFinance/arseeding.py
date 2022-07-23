@@ -15,7 +15,6 @@ def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_u
                     data=b.binary,
                     headers={'Content-Type': 'application/octet-stream'}
     )
-    print(res.content)
     if res.status_code == 200:
         order = res.json()
         
