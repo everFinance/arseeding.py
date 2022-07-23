@@ -17,7 +17,9 @@ upload file python.pdf to arweave using arseeding, and pay with usdc in your eve
 
 import arseeding, everpay
 # ar account
-signer = everpay.ARSigner('ar_wallet.json')
+#signer = everpay.ARSigner('ar_wallet.json')
+# eth account 
+signer = everpay.ETHSigner(pk)
 data = open('python.pdf', 'rb').read()
 o = arseeding.send_and_pay(signer, 'usdc', data)
 print(o['itemId'])
