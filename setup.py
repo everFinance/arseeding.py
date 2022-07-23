@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='arseeding',
-    version='0.0.1',
+    version='0.0.2',
     packages=['arseeding',],
     license='MIT',
     description = 'Python sdk for arseeding',
@@ -12,7 +12,7 @@ setuptools.setup(
     author_email = 'xiaojay@gmail.com',
     install_requires=['everpay', 'requests', 'web3', 'python-jose', 'arweave-python-client', 'eth_account', 'fastavro'],
     url = 'https://github.com/everFinance/arseeding.py',
-    download_url = 'https://github.com/everFinance/arseeding.py/archive/refs/tags/v0.0.1.tar.gz',
+    download_url = 'https://github.com/everFinance/arseeding.py/archive/refs/tags/v0.0.2.tar.gz',
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 2",
