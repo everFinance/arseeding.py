@@ -5,7 +5,6 @@ from .bundleitem import BundleItem
 arseed_url = 'https://arseed.web3infra.dev'
 pay_url = 'https://api.everpay.io'
 
-
 def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_url=arseed_url, pay_url=pay_url):
     if data == type(''):
         data = data.encode()
@@ -18,9 +17,9 @@ def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_u
     )
     if res.status_code == 200:
         order = res.json()
-        
-        account = everpay.Account(pay_url, signer)
-        account.transfer(currency, order['bundler'], int(order['fee']), data=json.dumps(order))
+        if pay_url:
+            data = {"appName":"arseeding","action":"payment","itemIds":[order['itemId']]}
+            account = everpay.Account(pay_url, signer)
+            account.transfer(currency, order['bundler'], int(order['fee']), data=json.dumps(data))
 
-        return order    
-    
+        return order
