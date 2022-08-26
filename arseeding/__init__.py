@@ -2,8 +2,9 @@ import requests, json
 import everpay
 from .bundleitem import BundleItem
 
-arseed_url = 'https://arseed.web3infura.io'
+arseed_url = 'https://arseed.web3infra.dev'
 pay_url = 'https://api.everpay.io'
+
 
 def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_url=arseed_url, pay_url=pay_url):
     if data == type(''):
