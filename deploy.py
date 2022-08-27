@@ -11,7 +11,7 @@ parser.add_option("-w", "--wallet",  dest="wallet",
 parser.add_option("-t", "--token",  dest="token", default="usdc",
                   help="token to pay")
 parser.add_option("-i", "--index",  dest="index", default="index.html",
-                  help="token to pay")
+                  help="index page")
   
 (options, args) = parser.parse_args()  
 

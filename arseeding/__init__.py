@@ -24,7 +24,7 @@ def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseed_u
 
         return order
 
-def pay(signer, currency, fee, bundler_addr, itemIds, pay_url=pay_url):
-    data = {"appName":"arseeding","action":"payment","itemIds":itemIds}
+def pay(signer, currency, fee, bundler_addr, item_ids, pay_url=pay_url):
+    data = {"appName":"arseeding","action":"payment","itemIds":item_ids}
     account = everpay.Account(pay_url, signer)
     return account.transfer(currency, bundler_addr, int(fee), data=json.dumps(data))
