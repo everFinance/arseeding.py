@@ -1,4 +1,5 @@
 import requests, json, os, mimetypes
+from colorama import Fore, Style
 import everpay
 from .bundleitem import BundleItem
 
@@ -31,7 +32,7 @@ def pay(signer, currency, fee, to, item_ids, pay_url=pay_url):
 
 def upload_folder_and_pay(signer, currency, folder, index_page='index.html', arseeding_url=arseeding_url, pay_url=pay_url, silent=True):
     if not silent:
-        print(f'start to upload folder: {folder}')
+        print(f'start to upload folder: {folder} \n')
     manifest = {}
     for root, dirs, files in os.walk(folder):
         for name in files:
@@ -48,8 +49,8 @@ def upload_folder_and_pay(signer, currency, folder, index_page='index.html', ars
             path = '/'.join(os.path.join(root, name).split('/')[1:])
             manifest[path] = order
             if not silent:
-                print(f'uploaded {name}', path, order['itemId'], order['fee'], '\n')
-
+                print(f'{Fore.GREEN}✓{Style.RESET_ALL} upload {name}', path, order['itemId'], order['fee'])
+    print()
     manifest_file = {
     "manifest": "arweave/paths",
     "version": "0.1.0",
@@ -79,7 +80,6 @@ def upload_folder_and_pay(signer, currency, folder, index_page='index.html', ars
     total_fee += int(order['fee'])
     item_id = order['itemId']
     if not silent:
-        print(f'uploaded folder {folder}. file number:{n+1}; total_fee: {total_fee}; url: {arseeding_url}/{item_id}')
+        print(f'{Fore.GREEN}✓{Style.RESET_ALL} uploaded folder {folder}. file number:{n+1}; total_fee: {total_fee}; url: {Fore.BLUE}{arseeding_url}/{item_id}{Style.RESET_ALL}')
 
-    
     return order['itemId'], order['fee']

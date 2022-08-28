@@ -10,7 +10,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     author = 'xiaojay',
     author_email = 'xiaojay@gmail.com',
-    install_requires=['everpay', 'requests', 'web3', 'python-jose', 'arweave-python-client', 'eth_account', 'fastavro'],
+    install_requires=['everpay', 'requests', 'web3', 'python-jose', 'arweave-python-client', 'eth_account', 'fastavro', 'colorama'],
     url = 'https://github.com/everFinance/arseeding.py',
     download_url = 'https://github.com/everFinance/arseeding.py/archive/refs/tags/v0.0.2.tar.gz',
     scripts=['bin/arseed'],

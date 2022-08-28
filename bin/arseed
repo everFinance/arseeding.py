@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import json
-from optparse import OptionParser  
+from optparse import OptionParser 
+from colorama import Fore, Style
 import arseeding, everpay
 
 parser = OptionParser()  
@@ -38,7 +39,7 @@ if options.file:
         
     fee = order['fee']
     item_id = order['itemId']
-    print(f'uploaded file {options.file}. fee: {fee}; url: {options.arseeding_url}/{item_id}')
+    print(f'{Fore.GREEN}✓{Style.RESET_ALL} upload file {options.file}. fee: {fee}; url: {Fore.BLUE}{options.arseeding_url}/{item_id}{Style.RESET_ALL}')
 
 if options.dir:
     arseeding.upload_folder_and_pay(signer, options.token, options.dir, index_page=options.index, 
