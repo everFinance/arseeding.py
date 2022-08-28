@@ -13,6 +13,7 @@ setuptools.setup(
     install_requires=['everpay', 'requests', 'web3', 'python-jose', 'arweave-python-client', 'eth_account', 'fastavro'],
     url = 'https://github.com/everFinance/arseeding.py',
     download_url = 'https://github.com/everFinance/arseeding.py/archive/refs/tags/v0.0.2.tar.gz',
+    scripts=['bin/arseed'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 2",
