@@ -46,10 +46,15 @@ def upload_folder_and_pay(signer, currency, folder, index_page='index.html', ars
                 ]
 
             order = send_and_pay(signer, currency, data, tags=tags, arseeding_url=arseeding_url, pay_url='')
-            path = '/'.join(os.path.join(root, name).split('/')[1:])
+            
+            path = os.path.join(root, name).split(folder)[-1]
+            if path.startswith('/'):
+                path = path[1:]
+
             manifest[path] = order
             if not silent:
                 print(f'{Fore.GREEN}✓{Style.RESET_ALL} Upload {name}', path, order['itemId'], order['fee'])
+
     print()
     manifest_file = {
     "manifest": "arweave/paths",
@@ -76,6 +81,7 @@ def upload_folder_and_pay(signer, currency, folder, index_page='index.html', ars
     tags = [
         {'name':'Content-Type', 'value':'application/x.arweave-manifest+json'},
     ]
+
     order = send_and_pay(signer, currency, manifest_file_json.encode(), tags=tags, arseeding_url=arseeding_url, pay_url=pay_url)
     total_fee += int(order['fee'])
     item_id = order['itemId']
