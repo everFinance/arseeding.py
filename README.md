@@ -9,7 +9,7 @@ pip install arseeding
 ```
 
 
-- Quick start
+## Quick start
 
 upload file python.pdf and folder public to arweave using arseeding, and pay with usdc in your everapy account.
 
@@ -30,7 +30,7 @@ print(o['itemId'])
 arseeding.upload_folder_and_pay(signer, 'usdc', 'public', slient=False)
 ```
 
-- Command Line Tool: arseed
+## Command Line Tool: arseed
 
 arseeding.py package have an Command Line Tool **arseed**
 
