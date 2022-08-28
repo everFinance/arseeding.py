@@ -1,0 +1,43 @@
+import json
+from optparse import OptionParser  
+import arseeding, everpay
+
+parser = OptionParser()  
+parser.add_option("-f", "--file", dest="file",  
+                  help="file to upload to arweave")
+parser.add_option("-d", "--dir", dest="dir",  
+                  help="directory to upload to arweave")
+parser.add_option("-w", "--wallet",  dest="wallet", 
+                  help="eth/ar wallet file")
+parser.add_option("-t", "--token",  dest="token", default="usdc",
+                  help="token to pay")
+parser.add_option("-i", "--index",  dest="index", default="index.html",
+                  help="index page")
+parser.add_option("-a", "--arseeding_url",  dest="arseeding_url", default=arseeding.arseeding_url,
+                  help="arseeding host url")
+parser.add_option("-p", "--pay_url",  dest="pay_url", default=arseeding.pay_url,
+                  help="pay url")
+    
+(options, args) = parser.parse_args()  
+
+def get_singer(fn):
+    try:
+        json.load(open(fn))
+    except json.JSONDecodeError:
+        return everpay.ETHSigner(open(fn).reade().strip())
+    else:
+        return everpay.ARSigner(fn)
+
+signer = get_singer(options.wallet)
+if options.file:
+    data = open(options.file, 'rb').read()
+    order = arseeding.send_and_pay(signer, options.token, data, 
+        arseeding_url=options.arseeding_url, pay_url=options.pay_url)
+        
+    fee = order['fee']
+    item_id = order['itemId']
+    print(f'uploaded file {options.file}. fee: {fee}; url: {options.arseeding_url}/{item_id}')
+
+if options.dir:
+    arseeding.upload_folder_and_pay(signer, options.token, options.dir, index_page=options.index, 
+        arseeding_url=options.arseeding_url, pay_url=options.pay_url, silent=False)
