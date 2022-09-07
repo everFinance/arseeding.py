@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import json
-from locale import currency
 from optparse import OptionParser 
 from colorama import Fore, Style
-import arseeding, everpay
+import arseeding, everpay, mimetypes
 
 parser = OptionParser()  
 parser.add_option("-f", "--file", dest="file",  
@@ -34,8 +33,15 @@ def get_singer(fn):
 
 signer = get_singer(options.wallet)
 if options.file:
+
+    tags = []
+    if mimetypes.guess_type(options.file)[0]:
+        tags = [
+            {'name':'Content-Type', 'value':mimetypes.guess_type(options.file)[0]},
+        ]
+
     data = open(options.file, 'rb').read()
-    order = arseeding.send_and_pay(signer, options.token, data, 
+    order = arseeding.send_and_pay(signer, options.token, data, tags=tags,
         arseeding_url=options.arseeding_url, pay_url=options.pay_url)
         
     fee = int(order['fee'])/10**int(order['decimals'])
