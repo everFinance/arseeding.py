@@ -32,7 +32,7 @@ arseeding.upload_folder_and_pay(signer, 'usdc', 'public', slient=False)
 
 ## Command Line Tool: arseed
 
-arseeding.py package have an Command Line Tool **arseed**
+arseeding.py package have an Command Line Tool **arseed**, to help user to upload file/folder easily.
 
 
 ![image](/assets/arseed.gif)
