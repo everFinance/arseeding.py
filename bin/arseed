@@ -27,7 +27,7 @@ def get_singer(fn):
     try:
         json.load(open(fn))
     except json.JSONDecodeError:
-        return everpay.ETHSigner(open(fn).reade().strip())
+        return everpay.ETHSigner(open(fn).read().strip())
     else:
         return everpay.ARSigner(fn)
 
