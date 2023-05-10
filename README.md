@@ -24,7 +24,7 @@ data = open('python.pdf', 'rb').read()
 o = arseeding.send_and_pay(signer, 'usdc', data)
 print(o['itemId'])
 
-#file id is o['itemId'], you could get you file in url https://arseed.web3infura.io/o['itemId'] or http://arweave.net/o['itemId'] in a few minutes
+#file id is o['itemId'], you could get you file in url https://arseed.web3infura.io/['itemId'] or http://arweave.net/['itemId'] in a few minutes
 
 # upload folder public
 arseeding.upload_folder_and_pay(signer, 'usdc', 'public', slient=False)
