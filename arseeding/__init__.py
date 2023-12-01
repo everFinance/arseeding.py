@@ -21,8 +21,10 @@ def send_and_pay(signer, currency, data, target='', anchor='', tags=[], arseedin
         if pay_url:
             data = {"appName":"arseeding","action":"payment","itemIds":[order['itemId']]}
             account = everpay.Account(pay_url, signer)
-            account.transfer(currency, order['bundler'], int(order['fee']), data=json.dumps(data))
-
+            t, result = account.transfer(currency, order['bundler'], int(order['fee']), data=json.dumps(data))
+            if str(result).find('ok') == -1:
+                print(f'{Fore.RED}Warning{Style.RESET_ALL}: payment failed. Please pay manually. send result:', result)
+        
         return order
 
 def pay(signer, currency, fee, to, item_ids, pay_url=pay_url):
