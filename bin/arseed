@@ -20,6 +20,8 @@ parser.add_option("-a", "--arseeding_url",  dest="arseeding_url", default=arseed
                   help="arseeding host url")
 parser.add_option("-p", "--pay_url",  dest="pay_url", default=arseeding.pay_url,
                   help="pay url")
+parser.add_option("-g", "--tags",  dest="tags", default="",
+                  help="tags in dumped json format")
     
 (options, args) = parser.parse_args()  
 
@@ -33,17 +35,20 @@ def get_singer(fn):
 
 signer = get_singer(options.wallet)
 if options.file:
-
-    tags = []
-    if mimetypes.guess_type(options.file)[0]:
-        tags = [
-            {'name':'Content-Type', 'value':mimetypes.guess_type(options.file)[0]},
-        ]
+    if options.tags:
+        tags_ = json.loads(options.tags)
+        tags = [{'name':k, 'value':v} for k,v in tags_.items()]
+    else:
+        tags = []
+        if mimetypes.guess_type(options.file)[0]:
+            tags = [
+                {'name':'Content-Type', 'value':mimetypes.guess_type(options.file)[0]},
+            ]
 
     data = open(options.file, 'rb').read()
     order = arseeding.send_and_pay(signer, options.token, data, tags=tags,
         arseeding_url=options.arseeding_url, pay_url=options.pay_url)
-        
+    
     fee = int(order['fee'])/10**int(order['decimals'])
     item_id = order['itemId']
     print(f'{Fore.GREEN}✓{Style.RESET_ALL} Upload file {options.file}. Fee: {Fore.GREEN}{fee} {options.token.upper()}{Style.RESET_ALL}; URL: {Fore.BLUE}{options.arseeding_url}/{item_id}{Style.RESET_ALL}')
