@@ -23,6 +23,8 @@ class BundleItem:
     def __init__(self, signer, target, anchor, tags, data):
         if type(tags) == type({}):
             tags = [{'name':k, 'value':v} for k,v in tags.items()]
+        if type(data) != type(b''):
+            data = data.encode('utf-8')
         self.signer = signer
         self.signature_type = sig_conf[signer.type.lower()]['signature_type']
         
